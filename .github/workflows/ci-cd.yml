@@ -78,6 +78,11 @@ jobs:
       uses: docker/build-push-action@v4
       with:
           context: .
+          build-args: |
+            IMAGE=node
+            TAG=16.20.2-alpine
+            ENVIROMENT=development
+
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/oncall-b:latest-${{ github.run_number }}
