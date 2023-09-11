@@ -80,4 +80,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/oncall-b
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/oncall-b:latest-${{ github.run_number }}
