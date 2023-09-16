@@ -61,10 +61,12 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Debug - Print REPO_NAME
-      run: echo "REPO_NAME: $REPO_NAME"
+      run: | 
+        echo "REPO_NAME: $REPO_NAME"
 
     - name: Debug - Print STAGING_REPO_NAME
-      run: echo "REPO_NAME: ${{ env.STAGING_REPO_NAME }}"
+      run: |
+        echo "REPO_NAME: ${{ env.STAGING_REPO_NAME }}"
 
     
     - name: Build and push
