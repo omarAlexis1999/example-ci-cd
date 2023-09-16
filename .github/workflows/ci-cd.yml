@@ -42,9 +42,9 @@ jobs:
       with:
           context: .
           build-args: |
-            IMAGE=$STAGING_IMAGE
-            TAG=$STAGING_TAG
-            ENVIROMENT=$STAGING_ENVIROMENT
+            IMAGE=${{ vars.STAGING_IMAGE }}
+            TAG=${{ vars.STAGING_TAG }}
+            ENVIROMENT=${{ vars.STAGING_ENVIROMENT }}
 
           file: ./Dockerfile
           push: true
