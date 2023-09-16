@@ -1,68 +1,90 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 🚀 Getting started with Strapi
 
-## Available Scripts
+Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 
-In the project directory, you can run:
+### `develop`
 
-### `npm start`
+Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+npm run develop
+# or
+yarn develop
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### `start`
 
-### `npm test`
+Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+npm run start
+# or
+yarn start
+```
 
-### `npm run build`
+### `build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+npm run build
+# or
+yarn build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `Documentation`
 
-### `npm run eject`
+Abre tu navegador web y visita la siguiente URL:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+http://localhost:1337/documentation
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+Esto te llevará a la documentación de tu API generada automáticamente por Strapi.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## ⚙️ Deployment
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📚 Learn more
 
-### Code Splitting
+- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
+- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
+- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
+- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
+- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
 
-### Analyzing the Bundle Size
+## ✨ Community
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
+- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
+- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
 
-### Making a Progressive Web App
+---
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+## Cómo crear una imagen de Docker y acceder a la documentación
 
-### Advanced Configuration
+A continuación, se describen los pasos para crear una imagen de Docker de tu proyecto y cómo acceder a la documentación.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+### Crear una imagen de Docker
 
-### Deployment
+1. Asegúrate de que Docker esté instalado en tu sistema.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+2. Abre una terminal y navega hasta la raíz de tu proyecto.
 
-### `npm run build` fails to minify
+3. Crea una imagen de Docker ejecutando el siguiente comando:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```bash
+   docker compose -f docker-compose.yml
+```
+
+4. Ejecuta el contenedor
+```bash
+   docker compose up -d
+```
+
+<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>

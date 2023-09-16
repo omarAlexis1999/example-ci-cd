@@ -1,0 +1,113 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "master"]
+  pull_request:
+    branches: [ "development" ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy to'
+        required: true
+        default: 'STAGING'
+        options:
+        - 'STAGING'
+        - 'PROD'
+
+
+jobs:
+  eslint:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run ESLint
+      run: npm run lint
+    
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    needs: eslint
+    if: github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Build
+      run: npm run build
+
+  docker_build_publish:
+    name: Build and Publish Docker Image to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up environment variables
+      run: |
+        if [ "${{ github.event.inputs.environment }}" == 'STAGING' ]; then
+          export IMAGE=$STAGING_IMAGE
+          export TAG=$STAGING_TAG
+          export ENVIROMENT=$STAGING_ENVIROMENT
+          export REPO_NAME=$STAGING_REPO_NAME
+        elif [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
+          export IMAGE=$PROD_IMAGE
+          export TAG=$PROD_TAG
+          export ENVIROMENT=$PROD_ENVIROMENT
+          export REPO_NAME=$PROD_REPO_NAME
+        fi
+      shell: bash
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+          context: .
+          build-args: |
+            IMAGE=${{ env.IMAGE }}
+            TAG=${{ env.TAG }}
+            ENVIROMENT=${{ env.ENVIROMENT }}
+
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROD_REPO_NAME }}:latest-${{ github.run_number }}
