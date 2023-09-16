@@ -48,7 +48,7 @@ jobs:
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${STAGING_REPO_NAME}:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.STAGING_REPO_NAME}}:latest-${{ github.run_number }}
 
 
   docker_build_manual:
