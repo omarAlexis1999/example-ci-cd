@@ -104,10 +104,10 @@ jobs:
       with:
           context: .
           build-args: |
-            IMAGE=${{ env.IMAGE }}
-            TAG=${{ env.TAG }}
-            ENVIROMENT=${{ env.ENVIROMENT }}
+            IMAGE=$IMAGE
+            TAG=$TAG
+            ENVIROMENT=$ENVIROMENT
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_NAME }}:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_NAME:latest-${{ github.run_number }}
