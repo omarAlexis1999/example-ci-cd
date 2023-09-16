@@ -16,60 +16,10 @@ on:
         - 'PROD'
 
 
-jobs:
-  eslint:
-    name: Run ESLint
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Run ESLint
-      run: npm run lint
-    
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-    needs: eslint
-    if: github.event_name == 'push'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Build
-      run: npm run build
-
   docker_build_publish:
+    environment: ${{ github.event.inputs.environment }}
     name: Build and Publish Docker Image to ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
-    needs: build
 
     steps:
     - name: Checkout code
