@@ -18,7 +18,7 @@ on:
 
 jobs:
   docker_build_publish:
-    environment: ${{ github.event.inputs.environment }}
+    environment: STAGING
     name: Build and Publish Docker Image to ${{ github.event.inputs.environment }}
     runs-on: ubuntu-latest
 
