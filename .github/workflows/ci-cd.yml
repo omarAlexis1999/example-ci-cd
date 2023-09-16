@@ -10,7 +10,6 @@ on:
       environment:
         description: 'Select the environment to deploy to'
         required: true
-        default: 'STAGING'
         options:
         - 'STAGING'
         - 'PROD'
@@ -110,4 +109,4 @@ jobs:
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROD_REPO_NAME }}:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_NAME }}:latest-${{ github.run_number }}
