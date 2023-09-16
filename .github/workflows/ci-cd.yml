@@ -18,13 +18,23 @@ on:
 
 jobs:
   docker_build_publish:
-    environment: STAGING
-    name: Build and Publish Docker Image to ${{ github.event.inputs.environment }}
+  
+    name: Build and Publish Docker Image
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Set Environment
+      id: set-env
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          environment=${{ github.event.inputs.environment }}
+        else
+          environment="STAGING"
+        fi
+        echo "::set-output name=environment::$environment"
 
     - name: Set up environment variables
       run: |
@@ -33,16 +43,11 @@ jobs:
           export TAG=$STAGING_TAG
           export ENVIROMENT=$STAGING_ENVIROMENT
           export REPO_NAME=$STAGING_REPO_NAME
-          
-          echo "My variable 1: $REPO_NAME"
         elif [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
-          echo ${{ github.event.inputs.environment }}
           export IMAGE=$PROD_IMAGE
           export TAG=$PROD_TAG
           export ENVIROMENT=$PROD_ENVIROMENT
           export REPO_NAME=$PROD_REPO_NAME
-          
-          echo "My variable 1: $REPO_NAME"
         fi
       shell: bash
     
