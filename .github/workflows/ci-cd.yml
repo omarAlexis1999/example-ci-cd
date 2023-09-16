@@ -29,11 +29,13 @@ jobs:
     - name: Set up environment variables
       run: |
         if [ "${{ github.event.inputs.environment }}" == 'STAGING' ]; then
+          echo ${{ github.event.inputs.environment }}
           export IMAGE=$STAGING_IMAGE
           export TAG=$STAGING_TAG
           export ENVIROMENT=$STAGING_ENVIROMENT
           export REPO_NAME=$STAGING_REPO_NAME
         elif [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
+          echo ${{ github.event.inputs.environment }}
           export IMAGE=$PROD_IMAGE
           export TAG=$PROD_TAG
           export ENVIROMENT=$PROD_ENVIROMENT
@@ -61,4 +63,4 @@ jobs:
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_NAME:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:latest-${{ github.run_number }}
