@@ -71,4 +71,4 @@ jobs:
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${REPO_NAME}:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.STAGING_REPO_NAME }}:latest-${{ github.run_number }}
