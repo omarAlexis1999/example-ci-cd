@@ -38,16 +38,16 @@ jobs:
 
     - name: Set up environment variables
       run: |
-        if [ "${{ github.event.inputs.environment }}" == 'STAGING' ]; then
-          export IMAGE=$STAGING_IMAGE
-          export TAG=$STAGING_TAG
-          export ENVIROMENT=$STAGING_ENVIROMENT
-          export REPO_NAME=$STAGING_REPO_NAME
-        elif [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
+        if [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
           export IMAGE=$PROD_IMAGE
           export TAG=$PROD_TAG
           export ENVIROMENT=$PROD_ENVIROMENT
           export REPO_NAME=$PROD_REPO_NAME
+        else
+          export IMAGE=$STAGING_IMAGE
+          export TAG=$STAGING_TAG
+          export ENVIROMENT=$STAGING_ENVIROMENT
+          export REPO_NAME=$STAGING_REPO_NAME
         fi
       shell: bash
     
