@@ -82,4 +82,4 @@ jobs:
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.PROD_REPO_NAME}}:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.PROD_REPO_NAME}}:latest-${{ vars.NAME_VERSION }}
