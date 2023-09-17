@@ -17,9 +17,9 @@ on:
 
 
 jobs:
-  docker_build_publish:
+  docker_build_staging:
 
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'STAGING')
     environment: STAGING
     name: Build and Publish Docker Image to Staging
     runs-on: ubuntu-latest
@@ -51,44 +51,17 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.STAGING_REPO_NAME}}:latest-${{ github.run_number }}
 
 
-  docker_build_manual:
+  docker_build_prod:
 
-    if: github.event_name == 'workflow_dispatch'
-    name: Build and Publish Docker Image Manual
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'PROD'
+    environment: PROD
+    name: Build and Publish Docker Image to PROD
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Set up environment variables
-      run: |
-        if [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
-          export IMAGE=$PROD_IMAGE
-          export TAG=$PROD_TAG
-          export ENVIROMENT=$PROD_ENVIROMENT
-          export REPO_NAME=$PROD_REPO_NAME
-        else
-          export IMAGE=$STAGING_IMAGE
-          export TAG=$STAGING_TAG
-          export ENVIROMENT=$STAGING_ENVIROMENT
-          export REPO_NAME=$STAGING_REPO_NAME
-        fi
-      shell: bash
     
-    - name: Paso Print
-      run: |
-        echo "Mi variable es $IMAGE"
-        echo "Mi variable es $TAG"
-        echo "Mi variable es $REPO_NAME"
-        echo "Mi variable es $PROD_REPO_NAME"
-        echo "Mi variable es ${{ vars.REPO_NAME }}"
-        echo "Mi variable es ${{ env.REPO_NAME }}"
-        echo "Mi variable es ${{ vars.PROD_REPO_NAME }}"
-        echo "Mi variable es ${{ env.PROD_REPO_NAME }}"
-        echo "Mi variable es ${{ vars.STAGING_REPO_NAME }}"
-        echo "Mi variable es ${{ env.STAGING_REPO_NAME }}"
-
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
@@ -103,10 +76,10 @@ jobs:
       with:
           context: .
           build-args: |
-            IMAGE=$IMAGE
-            TAG=$TAG
-            ENVIROMENT=$ENVIROMENT
+            IMAGE=${{ vars.PROD_IMAGE }}
+            TAG=${{ vars.PROD_TAG }}
+            ENVIROMENT=${{ vars.PROD_ENVIROMENT }}
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_NAME:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.PROD_REPO_NAME}}:latest-${{ github.run_number }}
