@@ -10,12 +10,14 @@ on:
       environment:
         description: 'Select the environment to deploy to'
         required: true
+        default: 'PROD'
         options:
         - 'STAGING'
         - 'PROD'
 
 
 jobs:
+
   eslint:
     name: Run ESLint
     runs-on: ubuntu-latest
@@ -40,54 +42,17 @@ jobs:
     - name: Run ESLint
       run: npm run lint
     
-  build:
-    name: Build
+  docker_build:
+
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master'
+    name: Build and Publish Docker Image ${{ github.event.inputs.environment || 'STAGING' }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
     needs: eslint
-    if: github.event_name == 'push'
+    environment: ${{ github.event.inputs.environment || 'STAGING' }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Build
-      run: npm run build
-
-  docker_build_publish:
-    name: Build and Publish Docker Image to ${{ github.event.inputs.environment }}
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up environment variables
-      run: |
-        if [ "${{ github.event.inputs.environment }}" == 'STAGING' ]; then
-          export IMAGE=$STAGING_IMAGE
-          export TAG=$STAGING_TAG
-          export ENVIROMENT=$STAGING_ENVIROMENT
-          export REPO_NAME=$STAGING_REPO_NAME
-        elif [ "${{ github.event.inputs.environment }}" == 'PROD' ]; then
-          export IMAGE=$PROD_IMAGE
-          export TAG=$PROD_TAG
-          export ENVIROMENT=$PROD_ENVIROMENT
-          export REPO_NAME=$PROD_REPO_NAME
-        fi
-      shell: bash
     
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -103,10 +68,16 @@ jobs:
       with:
           context: .
           build-args: |
-            IMAGE=${{ env.IMAGE }}
-            TAG=${{ env.TAG }}
-            ENVIROMENT=${{ env.ENVIROMENT }}
+            IMAGE=${{ vars.IMAGE }}
+            TAG=${{ vars.TAG }}
+            ENVIROMENT=${{ vars.ENVIROMENT }}
 
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_NAME }}:latest-${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.REPO_NAME}}:latest-${{ vars.NAME_VERSION }}
+
+    - name: Deploying to Render.com
+      env:
+        deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl "$deploy_url"
