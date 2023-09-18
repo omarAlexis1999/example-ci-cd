@@ -50,6 +50,12 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.STAGING_REPO_NAME}}:latest-${{ vars.NAME_VERSION }}
 
+    - name: Deploying to Render.com
+      env:
+        deploy_url: ${{ secrets.STAGING_RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl "$deploy_url"
+
 
   docker_build_prod:
 
